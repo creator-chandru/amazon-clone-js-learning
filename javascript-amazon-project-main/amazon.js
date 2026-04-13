@@ -52,8 +52,16 @@ products.forEach((product)=>{
 const productGrid = document.querySelector('.products-grid');
 productGrid.innerHTML = productsHTML;
 
+let timeoutId;
 document.querySelectorAll('.add-to-cart-button').forEach((button)=>{
     button.addEventListener('click',()=>{
+        document.querySelector('.added-to-cart').classList.add('added');
+
+        clearTimeout(timeoutId);
+
+        timeoutId = setTimeout(() => {
+          document.querySelector('.added-to-cart').classList.remove('added');
+        },2000);
         const productId = button.dataset.productId;
         let matchingItem;
         let selectedQuantity = Number(document.querySelector(`.js-quantity-selector-${productId}`).value);
