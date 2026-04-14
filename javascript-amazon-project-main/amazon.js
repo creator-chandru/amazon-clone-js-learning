@@ -42,7 +42,7 @@ products.forEach((product)=>{
 
           <div class="product-spacer"></div>
 
-          <div class="added-to-cart">
+          <div class="added-to-cart added-to-cart-${product.id}">
             <img src="images/icons/checkmark.png">
             Added
           </div>
@@ -65,10 +65,10 @@ function updateCartQuantity(){
 }
 
 function addedToCartAnimation(productId){
-  document.querySelector(`.added-to-cart`).classList.add('added');
+  document.querySelector(`.added-to-cart-${productId}`).classList.add('added');
   clearTimeout(timeoutIds[productId]);
   timeoutIds[productId] = setTimeout(() => {
-    document.querySelector(`.added-to-cart`).classList.remove('added');
+    document.querySelector(`.added-to-cart-${productId}`).classList.remove('added');
   },2000);
 }
 
@@ -82,4 +82,4 @@ document.querySelectorAll('.add-to-cart-button').forEach((button)=>{
         addToCart(productId,selectedQuantity);
         updateCartQuantity();
     });
-})
+});
