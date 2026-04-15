@@ -2,7 +2,7 @@ import {cart, removeFromCart, updateDeliveryOption} from '../data/cart.js';
 import {products, findProduct} from '../data/products.js';
 import { formatCurrency } from '../utilities/money.js';
 import dayjs from 'https://cdn.skypack.dev/dayjs';
-import {deliveryOptions} from '../data/deliveryOptions.js';
+import {deliveryOptions, findDeliveryMethod} from '../data/deliveryOptions.js';
 
 export function renderOrderSummary(){
     let cartSummaryHTML = '';
@@ -13,13 +13,7 @@ export function renderOrderSummary(){
 
         const deliveryOptionId = cartItem.deliveryOptionId;
 
-        let deliveryOption;
-
-        deliveryOptions.forEach((option)=>{
-            if (option.id === deliveryOptionId){
-                deliveryOption = option;
-            }
-        });
+        let deliveryOption = findDeliveryMethod(deliveryOptionId);
 
         let deliveryDate = dayjs().add(deliveryOption.deliveryDays,'days');
         const dateString = deliveryDate.format('dddd, MMMM D');
