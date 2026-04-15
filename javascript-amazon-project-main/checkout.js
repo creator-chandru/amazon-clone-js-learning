@@ -1,4 +1,4 @@
-import {cart, removeFromCart} from './data/cart.js';
+import {cart, removeFromCart, updateDeliveryOption} from './data/cart.js';
 import {products} from './data/products.js';
 import { formatCurrency } from './utilities/money.js';
 import dayjs from 'https://cdn.skypack.dev/dayjs';
@@ -27,7 +27,6 @@ cart.forEach((cartItem) => {
 
     let deliveryDate = dayjs().add(deliveryOption.deliveryDays,'days');
     const dateString = deliveryDate.format('dddd, MMMM D');
-    let priceString = deliveryOption.deliveryPrice ? `$${formatCurrency(deliveryOption.deliveryPrice)} - ` : 'FREE';
 
     cartSummaryHTML += `<div class="cart-item-container js-item-container-${matchingProduct.id}">
         <div class="delivery-date">
@@ -78,7 +77,9 @@ function deliveryOptionHTML (matchingProduct,cartItem){
 
         const isChecked = deliveryOption.id === cartItem.deliveryOptionId;
 
-        HTML += `<div class="delivery-option">
+        HTML += `<div class="delivery-option js-delivery-option"
+                    data-product-id = "${matchingProduct.id}"
+                    data-delivery-option-id = "${deliveryOption.id}">
                     <input type="radio"
                      ${isChecked ? 'checked' : ''}
                     class="delivery-option-input"
@@ -103,5 +104,12 @@ document.querySelectorAll('.delete-quantity-link').forEach((del)=>{
         removeFromCart(productId);
         const product = document.querySelector(`.js-item-container-${productId}`);
         product.remove();
+    });
+});
+
+document.querySelectorAll('.js-delivery-option').forEach((element)=>{
+    element.addEventListener('click',()=>{
+        const {productId , deliveryOptionId} = element.dataset;
+        updateDeliveryOption(productId,deliveryOptionId);
     });
 });
