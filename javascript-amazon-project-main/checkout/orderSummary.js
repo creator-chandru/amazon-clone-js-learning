@@ -1,5 +1,5 @@
 import {cart, removeFromCart, updateDeliveryOption} from '../data/cart.js';
-import {products} from '../data/products.js';
+import {products, findProduct} from '../data/products.js';
 import { formatCurrency } from '../utilities/money.js';
 import dayjs from 'https://cdn.skypack.dev/dayjs';
 import {deliveryOptions} from '../data/deliveryOptions.js';
@@ -9,12 +9,7 @@ export function renderOrderSummary(){
 
     cart.forEach((cartItem) => {
         const productId = cartItem.productId;
-        let matchingProduct;
-        products.forEach((product)=>{
-            if(product.id === productId){
-                matchingProduct = product;
-            }
-        });
+        let matchingProduct = findProduct(productId);
 
         const deliveryOptionId = cartItem.deliveryOptionId;
 
