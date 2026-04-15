@@ -6,8 +6,6 @@ import {deliveryOptions} from './data/deliveryOptions.js';
 
 let cartSummaryHTML = '';
 
-console.log(dayjs());
-console.log(dayjs().format('dddd, MMMM, D'));
 cart.forEach((cartItem) => {
     const productId = cartItem.productId;
     let matchingProduct;
@@ -17,9 +15,23 @@ cart.forEach((cartItem) => {
         }
     });
 
+    const deliveryOptionId = cartItem.deliveryOptionId;
+
+    let deliveryOption;
+
+    deliveryOptions.forEach((option)=>{
+        if (option.id === deliveryOptionId){
+            deliveryOption = option;
+        }
+    });
+
+    let deliveryDate = dayjs().add(deliveryOption.deliveryDays,'days');
+    const dateString = deliveryDate.format('dddd, MMMM D');
+    let priceString = deliveryOption.deliveryPrice ? `$${formatCurrency(deliveryOption.deliveryPrice)} - ` : 'FREE';
+
     cartSummaryHTML += `<div class="cart-item-container js-item-container-${matchingProduct.id}">
         <div class="delivery-date">
-            Delivery date: Tuesday, June 21
+            Delivery date: ${dateString}
         </div>
 
         <div class="cart-item-details-grid">
@@ -50,13 +62,13 @@ cart.forEach((cartItem) => {
             <div class="delivery-options-title">
                 Choose a delivery option:
             </div>
-            ${deliveryOptionHTML (matchingProduct)}
+            ${deliveryOptionHTML (matchingProduct,cartItem)}
             </div>
         </div>
         </div>`
 });
 
-function deliveryOptionHTML (matchingProduct){
+function deliveryOptionHTML (matchingProduct,cartItem){
     let HTML = '';
 
     deliveryOptions.forEach((deliveryOption)=>{
@@ -64,8 +76,11 @@ function deliveryOptionHTML (matchingProduct){
         const dateString = deliveryDate.format('dddd, MMMM D');
         let priceString = deliveryOption.deliveryPrice ? `$${formatCurrency(deliveryOption.deliveryPrice)} - ` : 'FREE';
 
+        const isChecked = deliveryOption.id === cartItem.deliveryOptionId;
+
         HTML += `<div class="delivery-option">
                     <input type="radio"
+                     ${isChecked ? 'checked' : ''}
                     class="delivery-option-input"
                     name="delivery-option-${matchingProduct.id}">
                     <div>
