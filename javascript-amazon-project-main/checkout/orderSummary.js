@@ -3,6 +3,7 @@ import {products, findProduct} from '../data/products.js';
 import { formatCurrency } from '../utilities/money.js';
 import dayjs from 'https://cdn.skypack.dev/dayjs';
 import {deliveryOptions, findDeliveryMethod} from '../data/deliveryOptions.js';
+import {renderPaymentSummary} from './paymentSummary.js';
 
 export function renderOrderSummary(){
     let cartSummaryHTML = '';
@@ -94,6 +95,8 @@ export function renderOrderSummary(){
             removeFromCart(productId);
             const product = document.querySelector(`.js-item-container-${productId}`);
             product.remove();
+
+            renderPaymentSummary();
         });
     });
 
@@ -102,6 +105,7 @@ export function renderOrderSummary(){
             const {productId , deliveryOptionId} = element.dataset;
             updateDeliveryOption(productId,deliveryOptionId);
             renderOrderSummary();
+            renderPaymentSummary();
         });
     });
 }
